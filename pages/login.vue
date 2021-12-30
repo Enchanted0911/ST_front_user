@@ -43,7 +43,7 @@ import '~/assets/css/sign.css'
 import '~/assets/css/iconfont.css'
 
 import cookie from 'js-cookie'
-import loginApi from '@/api/login'
+import userApi from '@/api/user'
 
 export default {
   layout: 'sign',
@@ -64,30 +64,24 @@ export default {
     // 登录的方法
     submitLogin () {
       // 第一步 调用接口进行登录，返回token字符串
-      loginApi.submitLoginUser(this.user)
+      userApi.login(this.user)
         .then((response) => {
-          if (response.data.code === 20001) {
-            this.$message({
-              type: 'error',
-              message: response.data.message
-            })
-          } else {
-            // 第二步 获取token字符串放到cookie里面
+          // 第二步 获取token字符串放到cookie里面
           // 第一个参数cookie名称，第二个参数值，第三个参数作用范围
-            cookie.set('junyao_token', response.data.data.token, { domain: '.junyao.icu' })
+          // cookie.set('Authorization', response.data, { domain: '.junyao.icu' })
+          cookie.set('Authorization', response.data, { domain: '127.0.0.1' })
+          // 第四步 调用接口 根据token获取用户信息，为了首页面显示
+          userApi.gainUserInfoByToken()
+            .then((response) => {
+              this.loginInfo = response.data
+              // 获取返回用户信息，放到cookie里面
+              cookie.set('junyao_ucenter', this.loginInfo, { domain: '127.0.0.1' })
 
-            // 第四步 调用接口 根据token获取用户信息，为了首页面显示
-            loginApi.getLoginUserInfo()
-              .then((response) => {
-                this.loginInfo = response.data.data.userInfo
-                // 获取返回用户信息，放到cookie里面
-                cookie.set('junyao_ucenter', this.loginInfo, { domain: '.junyao.icu' })
-
-                // 跳转页面
-                window.location.href = '/'
-              })
-          }
-        })
+              // 跳转页面
+              window.location.href = '/'
+            })
+        }
+        )
     },
     checkPhone (rule, value, callback) {
       // debugger

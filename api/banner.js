@@ -4,10 +4,9 @@
 import request from '@/utils/request'
 
 export default {
-    // 查询前两条banner数据
-    getListBanner() {
+    gainAllBanner() {
         return request({
-            url: '/eduCms/bannerFront/getAllBanner',
+            url: '/rabbit/extracurricular/banner',
             method: 'get'
         })
     }

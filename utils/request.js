@@ -10,7 +10,7 @@ import cookie from 'js-cookie'
 
 // 创建axios实例
 const service = axios.create({
-    baseURL: 'http://120.77.81.245:8222', // api的base_url
+    baseURL: 'http://127.0.0.1:3333', // api的base_url
     // eslint-disable-next-line indent
     timeout: 20000 // 请求超时时间
 })
@@ -19,11 +19,11 @@ service.interceptors.request.use(
     (config) => {
         // do something before request is sent
 
-        if (cookie.get('junyao_token')) {
+        if (cookie.get('Authorization')) {
             // let each request carry token
             // ['X-Token'] is a custom headers key
             // please modify it according to the actual situation
-            config.headers.token = cookie.get('junyao_token')
+            config.headers.Authorization = cookie.get('Authorization')
         }
         return config
     },
@@ -37,17 +37,17 @@ service.interceptors.request.use(
 // http response 拦截器
 service.interceptors.response.use(
     (response) => {
-        if (response.data.code !== 20000) {
+        if (response.data.code !== '20000') {
             // 25000：订单支付中，不做任何提示
-            if (response.data.code !== 25000) {
+            if (response.data.code !== '25000') {
                 Message({
-                    message: response.data.message || 'error',
+                    message: response.data.msg || 'error',
                     type: 'error',
                     duration: 5 * 1000
                 })
             }
         } else {
-            return response
+            return response.data
         }
     },
     (error) => {

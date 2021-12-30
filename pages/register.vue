@@ -139,7 +139,7 @@
 import '~/assets/css/sign.css'
 import '~/assets/css/iconfont.css'
 
-import registerApi from '@/api/register'
+import userApi from '@/api/user'
 
 export default {
   layout: 'sign',
@@ -160,21 +160,14 @@ export default {
   methods: {
     // 注册提交的方法
     submitRegister () {
-      registerApi.registerMember(this.params).then((response) => {
-        if (response.data.code === 20001) {
-          this.$message({
-            type: 'error',
-            message: response.data.message
-          })
-        } else {
-          // 提示注册成功
-          this.$message({
-            type: 'success',
-            message: '注册成功'
-          })
-          // 跳转登录页面
-          this.$router.push({ path: '/login' })
-        }
+      userApi.register(this.params).then((response) => {
+        // 提示注册成功
+        this.$message({
+          type: 'success',
+          message: '注册成功'
+        })
+        // 跳转登录页面
+        this.$router.push({ path: '/login' })
       })
     },
     timeDown () {

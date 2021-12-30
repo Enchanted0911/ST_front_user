@@ -12,7 +12,7 @@
             <el-avatar :src="userInfo.avatar" :size="130" />
             <el-upload
               class="avatar-uploader"
-              :action="BASE_API + '/eduOss/fileOss/member'"
+              :action="BASE_API + '/rabbit/back/oss/member'"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
@@ -79,7 +79,7 @@ export default {
   props: ['loginInfo'],
   data () {
     return {
-      BASE_API: 'http://120.77.81.245:8222',
+      BASE_API: 'http://127.0.0.1:3333',
       show: false,
       userInfo: {},
       userInfoInit: {},
@@ -119,9 +119,6 @@ export default {
       this.userInfoReq.birthday = this.userInfo.birthday
       this.userInfoReq.sign = this.userInfo.sign
       userApi.updateUserInfo(this.userInfoReq).then((response) => {
-        if (response.data.code !== 20000) {
-          return false
-        }
         this.$message({
           type: 'success',
           message: '修改成功!'

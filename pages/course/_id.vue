@@ -6,18 +6,18 @@
         <a href="#" title class="c-999 fsize14">首页</a>
         \
         <a href="#" title class="c-999 fsize14">{{
-          courseWebVo.subjectLevelOne
+          courseDetails.subjectParentName
         }}</a>
         \
-        <span class="c-333 fsize14">{{ courseWebVo.subjectLevelTwo }}</span>
+        <span class="c-333 fsize14">{{ courseDetails.subjectName }}</span>
       </section>
       <div>
         <article class="c-v-pic-wrap" style="height: 357px">
           <section id="videoPlay" class="p-h-video-box">
             <img
               height="357px"
-              :src="courseWebVo.cover"
-              :alt="courseWebVo.title"
+              :src="courseDetails.cover"
+              :alt="courseDetails.title"
               class="dis c-v-pic"
             >
           </section>
@@ -25,19 +25,19 @@
         <aside class="c-attr-wrap">
           <section class="ml20 mr15">
             <h2 class="hLh30 txtOf mt15">
-              <span class="c-fff fsize24">{{ courseWebVo.title }}</span>
+              <span class="c-fff fsize24">{{ courseDetails.title }}</span>
             </h2>
             <section class="c-attr-jg">
               <span class="c-fff">价格：</span>
               <b
                 class="c-yellow"
                 style="font-size: 24px"
-              >￥{{ courseWebVo.price }}</b>
+              >￥{{ courseDetails.price }}</b>
             </section>
             <section class="c-attr-mt c-attr-undis">
               <span
                 class="c-fff fsize14"
-              >主讲： {{ courseWebVo.teacherName }}&nbsp;&nbsp;&nbsp;</span>
+              >主讲： {{ courseDetails.teacherName }}&nbsp;&nbsp;&nbsp;</span>
             </section>
             <section class="c-attr-mt of">
               <span class="ml10 vam">
@@ -45,7 +45,7 @@
                 <a class="c-fff vam" title="收藏" href="#">收藏</a>
               </span>
             </section>
-            <section v-if="isbuy || Number(courseWebVo.price) === 0" class="c-attr-mt">
+            <section v-if="ifBuy || Number(courseDetails.price) === 0" class="c-attr-mt">
               <a href="#" title="立即观看" class="comm-btn c-btn-3">立即观看</a>
             </section>
             <section v-else class="c-attr-mt">
@@ -61,7 +61,7 @@
                 <span class="c-fff f-fM">购买数</span>
                 <br>
                 <h6 class="c-fff f-fM mt10">
-                  {{ courseWebVo.buyCount }}
+                  {{ courseDetails.buyCount }}
                 </h6>
               </aside>
             </li>
@@ -106,8 +106,8 @@
                   </h6>
                   <div class="course-txt-body-wrap">
                     <section class="course-txt-body">
-                      <p v-html="courseWebVo.description">
-                        {{ courseWebVo.description }}
+                      <p v-html="courseDetails.description">
+                        {{ courseDetails.description }}
                       </p>
                     </section>
                   </div>
@@ -177,7 +177,7 @@
                     <div class="u-face">
                       <a href="#">
                         <img
-                          :src="courseWebVo.avatar"
+                          :src="courseDetails.avatar"
                           width="50"
                           height="50"
                           alt
@@ -186,11 +186,11 @@
                     </div>
                     <section class="hLh30 txtOf">
                       <a class="c-333 fsize16 fl" href="#">{{
-                        courseWebVo.teacherName
+                        courseDetails.teacherName
                       }}</a>
                     </section>
                     <section class="hLh20 txtOf">
-                      <span class="c-999">{{ courseWebVo.intro }}</span>
+                      <span class="c-999">{{ courseDetails.teacherIntro }}</span>
                     </section>
                   </li>
                 </ul>
@@ -272,7 +272,7 @@
                   <span
                     class="fr"
                   ><font class="fsize12 c-999 ml5">{{
-                    comment.gmtCreate
+                    comment.createdTime
                   }}</font></span>
                 </div>
               </li>
@@ -280,45 +280,14 @@
           </section>
         </section>
         <!-- 公共分页 开始 -->
-        <div class="paging">
-          <!-- undisable这个class是否存在，取决于数据属性hasPrevious -->
-          <a
-            :class="{ undisable: !data.hasPrevious }"
-            href="#"
-            title="首页"
-            @click.prevent="gotoPage(1)"
-          >首</a>
-          <a
-            :class="{ undisable: !data.hasPrevious }"
-            href="#"
-            title="前一页"
-            @click.prevent="gotoPage(data.current - 1)"
-          >&lt;</a>
-          <a
-            v-for="page in data.pages"
-            :key="page"
-            :class="{
-              current: data.current == page,
-              undisable: data.current == page,
-            }"
-            :title="'第' + page + '页'"
-            href="#"
-            @click.prevent="gotoPage(page)"
-          >{{ page }}</a>
-          <a
-            :class="{ undisable: !data.hasNext }"
-            href="#"
-            title="后一页"
-            @click.prevent="gotoPage(data.current + 1)"
-          >&gt;</a>
-          <a
-            :class="{ undisable: !data.hasNext }"
-            href="#"
-            title="末页"
-            @click.prevent="gotoPage(data.pages)"
-          >末</a>
-          <div class="clear" />
-        </div>
+        <el-pagination
+          :current-page="commentPage.page"
+          :page-size="commentPage.pageSize"
+          :total="total"
+          style="padding: 30px 0; text-align: center"
+          layout="total, prev, pager, next, jumper"
+          @current-change="gotoPage"
+        />
         <!-- 公共分页 结束 -->
       </div>
     </div>
@@ -326,9 +295,8 @@
 </template>
 
 <script>
-import course from '@/api/course'
-import comment from '@/api/comment'
-import ordersApi from '@/api/orders'
+import courseApi from '@/api/course'
+import commentApi from '@/api/comment'
 export default {
   asyncData ({ params, error }) {
     return {
@@ -338,16 +306,19 @@ export default {
   data () {
     return {
       data: {},
-      page: 1,
-      limit: 4,
-      total: 10,
+      total: 0,
       comment: {
         content: '',
         courseId: ''
       },
-      courseWebVo: {},
+      commentPage: {
+        page: 1,
+        pageSize: 10,
+        courseId: this.courseId
+      },
+      courseDetails: {},
       chapterVideoList: [],
-      isbuy: false
+      ifBuy: false
     }
   },
   created () {
@@ -357,46 +328,44 @@ export default {
   methods: {
     // 查询课程详情信息
     initCourseInfo () {
-      course.getCourseInfo(this.courseId)
+      courseApi.courseDetails(this.courseId)
         .then((response) => {
-          this.courseWebVo = response.data.data.courseWebVo
-          this.chapterVideoList = response.data.data.chapterVideoList
-          this.isbuy = response.data.data.isBuy
+          this.courseDetails = response.data
+        })
+      courseApi.gainCourseOutline(this.courseId)
+        .then((response) => {
+          this.chapterVideoList = response.data
+        })
+      courseApi.gainIfBuy(this.courseId)
+        .then((response) => {
+          this.ifBuy = response.data
         })
     },
     initComment () {
-      comment.getPageList(this.page, this.limit, this.courseId).then((response) => {
-        this.data = response.data.data
-      })
+      this.gotoPage()
     },
     addComment () {
       this.comment.courseId = this.courseId
-      this.comment.teacherId = this.courseWebVo.teacherId
-      comment.addComment(this.comment).then((response) => {
-        if (response.data.success) {
-          this.comment.content = ''
-          this.initComment()
-        } else {
-          this.$message.error(response.data.message)
-        }
+      this.comment.teacherId = this.courseDetails.teacherId
+      commentApi.saveComment(this.comment).then((response) => {
+        this.comment.content = ''
+        this.initComment()
       })
     },
-    gotoPage (page) {
-      comment.getPageList(page, this.limit, this.courseId).then((response) => {
-        this.data = response.data.data
+    gotoPage (page = 1) {
+      commentApi.pageComment(this.commentPage).then((response) => {
+        this.data = response.data
+        this.total = response.data.total
       })
     },
     createOrders () {
-      if (true) {
-        this.$message.success('全部免费不需要购买哦!')
-        return
-      }
-      ordersApi.createOrders(this.courseId)
-        .then((response) => {
-          // 获取返回订单号
-          // 生成订单之后，跳转订单显示页面
-          this.$router.push({ path: '/orders/' + response.data.data.orderId })
-        })
+      this.$message.success('全部免费不需要购买哦!')
+      // ordersApi.createOrders(this.courseId)
+      //   .then((response) => {
+      //     // 获取返回订单号
+      //     // 生成订单之后，跳转订单显示页面
+      //     this.$router.push({ path: '/orders/' + response.data.data.orderId })
+      //   })
     }
   }
 }

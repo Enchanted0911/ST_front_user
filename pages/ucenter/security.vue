@@ -119,16 +119,14 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           userApi.updatePassword(this.passwordInfo).then((response) => {
-            if (response.data.success) {
-              this.$message({
-                type: 'success',
-                message: '修改密码成功! 请重新登陆'
-              })
-              cookie.set('junyao_token', '', { domain: '.junyao.icu' })
-              cookie.set('junyao_ucenter', '', { domain: '.junyao.icu' })
-              // 回到首页面
-              window.location.href = '/'
-            }
+            this.$message({
+              type: 'success',
+              message: '修改密码成功! 请重新登陆'
+            })
+            cookie.set('junyao_token', '', { domain: '.junyao.icu' })
+            cookie.set('junyao_ucenter', '', { domain: '.junyao.icu' })
+            // 回到首页面
+            window.location.href = '/'
           })
         } else {
           this.$message({

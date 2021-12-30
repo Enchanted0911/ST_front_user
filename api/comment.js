@@ -3,29 +3,24 @@
 /* eslint-disable indent */
 import request from '@/utils/request'
 
+const apiName = '/rabbit/classroom/course-comment'
+
 export default {
 
-    getPageList(page, limit, courseId) {
+    pageComment(commentPage) {
         return request({
-
-            url: `/eduService/comment/page-comment/${page}/${limit}`,
-
+            url: `${apiName}/page`,
             method: 'get',
-
-            params: { courseId }
+            params: { commentPage }
 
         })
     },
 
-    addComment(comment) {
+    saveComment(comment) {
         return request({
-
-            url: '/eduService/comment/auth/save',
-
+            url: `${apiName}`,
             method: 'post',
-
             data: comment
-
         })
     }
 

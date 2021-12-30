@@ -38,7 +38,7 @@
                       <div class="cc-mask">
                         <a
                           :href="'/course/'+course.id"
-                          :title="开始学习"
+                          :title="courseImgTitle"
                           class="comm-btn c-btn-1"
                         >开始学习</a>
                       </div>
@@ -125,8 +125,9 @@
 </template>
 
 <script>
-import banner from '@/api/banner'
-import index from '@/api/index'
+import bannerApi from '@/api/banner'
+import courseApi from '@/api/course'
+import teacherApi from '@/api/teacher'
 import SwiperCore, { Navigation, Pagination, Autoplay } from 'swiper'
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 SwiperCore.use([Navigation, Pagination, Autoplay])
@@ -140,6 +141,7 @@ export default {
   },
   data () {
     return {
+      courseImgTitle: '开始学习',
       swiperOptions: {
         autoplay: {
           delay: 3000, // 3秒切换一次
@@ -172,15 +174,17 @@ export default {
   methods: {
     // 查询热门课程和名师
     getHotCourseTeacher () {
-      index.getIndexData().then((response) => {
-        this.eduList = response.data.data.eduList
-        this.teacherList = response.data.data.teacherList
+      courseApi.list8HotCourse().then((response) => {
+        this.eduList = response.data
+      })
+      teacherApi.list4HotTeacher().then((response) => {
+        this.teacherList = response.data
       })
     },
     // 查询banner数据
     getBannerList () {
-      banner.getListBanner().then((response) => {
-        this.bannerList = response.data.data.list
+      bannerApi.gainAllBanner().then((response) => {
+        this.bannerList = response.data
       })
     }
   }

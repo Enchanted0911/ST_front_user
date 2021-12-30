@@ -76,16 +76,30 @@
 </template>
 <script>
 import teacherApi from '@/api/teacher'
+import courseApi from '@/api/course'
 export default {
   // params.id获取路径id值
   asyncData ({ params, error }) {
-    return teacherApi.getTeacherInfo(params.id)
-      .then((response) => {
-        return {
-          teacher: response.data.data.teacher,
-          courseList: response.data.data.courseList
-        }
-      })
+    return {
+      teacherId: params.id,
+      teacher: {},
+      courseList: []
+    }
+  },
+  created () {
+    this.initData()
+  },
+  methods: {
+    initData() {
+      teacherApi.teacherDetails(this.teacherId)
+        .then((response) => {
+          this.teacher = response.data
+        })
+      courseApi.listCourseByTeacherId(this.teacherId)
+        .then((response) => {
+          this.courseList = response.data
+        })
+    }
   }
 }
 </script>

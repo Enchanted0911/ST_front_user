@@ -14,7 +14,7 @@
         <div>
           <el-form :inline="true" size="mini" class="demo-form-inline" @submit.native.prevent>
             <el-form-item>
-              <el-input v-model="teacherName" clearable placeholder="请输入讲师关键字" @keyup.enter.native="gotoPage(1)" />
+              <el-input v-model="teacherPage.teacherName" clearable placeholder="请输入讲师关键字" @keyup.enter.native="gotoPage()" />
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="gotoPage(1)">
@@ -34,7 +34,7 @@
           <!-- /无数据提示 结束-->
           <article class="i-teacher-list">
             <ul class="of">
-              <li v-for="teacher in data.items" :key="teacher.id">
+              <li v-for="teacher in data.rows" :key="teacher.id">
                 <section class="i-teach-wrap">
                   <div class="i-teach-pic">
                     <a :href="'/teacher/'+teacher.id" :title="teacher.name" target="_blank">
@@ -59,49 +59,14 @@
           </article>
         </div>
         <!-- 公共分页 开始 -->
-        <div>
-          <div class="paging">
-            <!-- undisable这个class是否存在，取决于数据属性hasPrevious -->
-            <a
-              :class="{undisable: !data.hasPrevious}"
-              href="#"
-              title="首页"
-              @click.prevent="gotoPage(1)"
-            >首页</a>
-
-            <a
-              :class="{undisable: !data.hasPrevious}"
-              href="#"
-              title="上一页"
-              @click.prevent="gotoPage(data.current-1)"
-            >&lt;</a>
-
-            <a
-              v-for="page in data.pages"
-              :key="page"
-              :class="{current: data.current == page, undisable: data.current == page}"
-              :title="'第'+page+'页'"
-              href="#"
-              @click.prevent="gotoPage(page)"
-            >{{ page }}</a>
-
-            <a
-              :class="{undisable: !data.hasNext}"
-              href="#"
-              title="下一页"
-              @click.prevent="gotoPage(data.current+1)"
-            >&gt;</a>
-
-            <a
-              :class="{undisable: !data.hasNext}"
-              href="#"
-              title="末页"
-              @click.prevent="gotoPage(data.pages)"
-            >末页</a>
-
-            <div class="clear" />
-          </div>
-        </div>
+        <el-pagination
+          :current-page="teacherPage.page"
+          :page-size="teacherPage.pageSize"
+          :total="total"
+          style="padding: 30px 0; text-align: center"
+          layout="total, prev, pager, next, jumper"
+          @current-change="gotoPage"
+        />
         <!-- 公共分页 结束 -->
       </section>
     </section>
@@ -114,25 +79,31 @@ import teacherApi from '@/api/teacher'
 export default {
   data () {
     return {
-      teacherName: '',
-      data: {}
+      data: {},
+      total: 0,
+      teacherPage: {
+        page: 1,
+        pageSize: 8
+      }
     }
   },
   created () {
-    this.gotoPage(1)
+    this.gotoPage()
   },
   methods: {
     // 分页切换的方法
     // 参数是页码数
-    gotoPage (page) {
-      teacherApi.getTeacherList(page, 8, this.teacherName)
+    gotoPage (page = 1) {
+      this.teacherPage.page = page
+      teacherApi.pageTeacher(this.teacherPage)
         .then((response) => {
-          this.data = response.data.data
+          this.data = response.data
+          this.total = response.data.total
         })
     },
     searchAll () {
-      this.teacherName = ''
-      this.gotoPage(1)
+      this.teacherPage.teacherName = ''
+      this.gotoPage()
     }
   }
 

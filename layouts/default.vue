@@ -139,7 +139,7 @@ import '~/assets/css/swiper-3.3.1.min.css'
 import '~/assets/css/pages-weixinpay.css'
 
 import cookie from 'js-cookie'
-import loginApi from '@/api/login'
+import userApi from '@/api/user'
 
 export default {
   data () {
@@ -172,10 +172,10 @@ export default {
       cookie.set('junyao_token', this.token, { domain: '.junyao.icu' })
       cookie.set('junyao_ucenter', '', { domain: '.junyao.icu' })
       // 调用接口，根据token值获取用户信息
-      loginApi.getLoginUserInfo()
+      userApi.gainUserInfoByToken()
         .then((response) => {
           // console.log('################'+response.data.data.userInfo)
-          this.loginInfo = response.data.data.userInfo
+          this.loginInfo = response.data
           cookie.set('junyao_ucenter', this.loginInfo, { domain: '.junyao.icu' })
         })
     },
