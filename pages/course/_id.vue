@@ -139,16 +139,26 @@
 
                             <ol class="lh-menu-ol" style="display: block">
                               <li
-                                v-for="video in chapter.children"
+                                v-for="video in chapter.courseSubsectionResList"
                                 :key="video.id"
                                 class="lh-menu-second ml30"
                               >
                                 <a
+                                  v-if="video.videoSourceId != null"
                                   :href="'/player/' + video.videoSourceId"
                                   target="_blank"
                                 >
                                   <span class="fr">
-                                    <i class="free-icon vam mr10">免费试听</i>
+                                    <i class="free-icon vam mr10">开始观看</i>
+                                  </span>
+                                  <em class="lh-menu-i-2 icon16 mr5">&nbsp;</em>{{ video.title }}
+                                </a>
+                                <a
+                                  v-else
+                                  href="#"
+                                >
+                                  <span class="fr">
+                                    <i class="free-icon vam mr10">该小节未上传视频</i>
                                   </span>
                                   <em class="lh-menu-i-2 icon16 mr5">&nbsp;</em>{{ video.title }}
                                 </a>
@@ -177,7 +187,7 @@
                     <div class="u-face">
                       <a href="#">
                         <img
-                          :src="courseDetails.avatar"
+                          :src="courseDetails.teacherAvatar"
                           width="50"
                           height="50"
                           alt
@@ -185,7 +195,7 @@
                       </a>
                     </div>
                     <section class="hLh30 txtOf">
-                      <a class="c-333 fsize16 fl" href="#">{{
+                      <a class="c-333 fsize16 fl" :href="'/teacher/' + courseDetails.teacherId">{{
                         courseDetails.teacherName
                       }}</a>
                     </section>

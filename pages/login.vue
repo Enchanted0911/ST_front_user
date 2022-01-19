@@ -69,13 +69,13 @@ export default {
           // 第二步 获取token字符串放到cookie里面
           // 第一个参数cookie名称，第二个参数值，第三个参数作用范围
           // cookie.set('Authorization', response.data, { domain: '.junyao.icu' })
-          cookie.set('Authorization', response.data, { domain: '127.0.0.1' })
+          cookie.set('Authorization', response.data, { domain: 'localhost' })
           // 第四步 调用接口 根据token获取用户信息，为了首页面显示
           userApi.gainUserInfoByToken()
             .then((response) => {
               this.loginInfo = response.data
               // 获取返回用户信息，放到cookie里面
-              cookie.set('junyao_ucenter', this.loginInfo, { domain: '127.0.0.1' })
+              cookie.set('junyao_ucenter', this.loginInfo, { domain: 'localhost' })
 
               // 跳转页面
               window.location.href = '/'
@@ -85,7 +85,7 @@ export default {
     },
     checkPhone (rule, value, callback) {
       // debugger
-      if (!(/^1[34578]\d{9}$/.test(value))) {
+      if (!(/^1[123456789]\d{9}$/.test(value))) {
         return callback(new Error('手机号码格式不正确'))
       }
       return callback()

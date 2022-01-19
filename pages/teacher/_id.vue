@@ -57,7 +57,7 @@
                   <section class="course-img">
                     <img :src="course.cover" class="img-responsive">
                     <div class="cc-mask">
-                      <a :href="'/course/'+course.id" :title="开始学习" target="_blank" class="comm-btn c-btn-1">开始学习</a>
+                      <a :href="'/course/'+course.id" :title="courseImgTitle" target="_blank" class="comm-btn c-btn-1">开始学习</a>
                     </div>
                   </section>
                   <h3 class="hLh30 txtOf mt10">
@@ -81,6 +81,7 @@ export default {
   // params.id获取路径id值
   asyncData ({ params, error }) {
     return {
+      courseImgTitle: '开始学习',
       teacherId: params.id,
       teacher: {},
       courseList: []

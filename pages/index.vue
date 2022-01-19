@@ -69,7 +69,7 @@
               <div class="clear" />
             </article>
             <section class="tac pt20">
-              <a href="/course" title="全部课程" class="comm-btn c-btn-2">全部课程</a>
+              <a :href="'/course'" title="全部课程" class="comm-btn c-btn-2">全部课程</a>
             </section>
           </div>
         </section>
@@ -89,13 +89,13 @@
                 <li v-for="teacher in teacherList" :key="teacher.id">
                   <section class="i-teach-wrap">
                     <div class="i-teach-pic">
-                      <a href="/teacher/1" :title="teacher.name">
+                      <a :href="'/teacher/'+teacher.id" :title="teacher.name">
                         <img :alt="teacher.name" :src="teacher.avatar">
                       </a>
                     </div>
                     <div class="mt10 hLh30 txtOf tac">
                       <a
-                        href="/teacher/1"
+                        :href="'/teacher/'+teacher.id"
                         :title="teacher.name"
                         class="fsize18 c-666"
                       >{{ teacher.name }}</a>
@@ -114,7 +114,7 @@
               <div class="clear" />
             </article>
             <section class="tac pt20">
-              <a href="/teacher" title="全部讲师" class="comm-btn c-btn-2">全部讲师</a>
+              <a :href="'/teacher'" title="全部讲师" class="comm-btn c-btn-2">全部讲师</a>
             </section>
           </div>
         </section>

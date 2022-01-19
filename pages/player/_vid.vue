@@ -1,29 +1,26 @@
-
 <template>
   <div>
     <link
       rel="stylesheet"
-      href="https://g.alicdn.com/de/prismplayer/2.9.3/skins/default/aliplayer-min.css"
+      href="https://g.alicdn.com/de/prismplayer/2.9.17/skins/default/aliplayer-min.css"
     >
     <script
       charset="utf-8"
       type="text/javascript"
-      src="https://g.alicdn.com/de/prismplayer/2.9.3/aliplayer-min.js"
+      src="https://g.alicdn.com/de/prismplayer/2.9.17/aliplayer-min.js"
     />
-
     <!-- 定义播放器dom -->
     <div id="J_prismPlayer" class="prism-player" />
   </div>
 </template>
 <script>
 import vod from '@/api/vod'
-
 export default {
   layout: 'video', // 应用video布局
   asyncData ({ params, error }) {
-    return vod.getPlayAuth(params.vid).then((response) => {
+    return vod.gainPlayAuth(params.vid).then((response) => {
       return {
-        playAuth: response.data.data.playAuth,
+        playAuth: response.data,
         vid: params.vid
       }
     })
@@ -41,7 +38,6 @@ export default {
         // 以下可选设置
         cover: 'http://liveroom-img.oss-cn-qingdao.aliyuncs.com/logo.png', // 封面
         qualitySort: 'asc', // 清晰度排序
-
         mediaType: 'video', // 返回音频还是视频
         autoplay: false, // 自动播放
         isLive: false, // 直播

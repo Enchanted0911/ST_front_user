@@ -169,20 +169,20 @@ export default {
     wxLogin () {
       // console.log('************'+this.token)
       // 把token值放到cookie里面
-      cookie.set('junyao_token', this.token, { domain: '.junyao.icu' })
-      cookie.set('junyao_ucenter', '', { domain: '.junyao.icu' })
+      cookie.set('Authorization', this.token, { domain: 'localhost' })
+      cookie.set('junyao_ucenter', '', { domain: 'localhost' })
       // 调用接口，根据token值获取用户信息
       userApi.gainUserInfoByToken()
         .then((response) => {
           // console.log('################'+response.data.data.userInfo)
           this.loginInfo = response.data
-          cookie.set('junyao_ucenter', this.loginInfo, { domain: '.junyao.icu' })
+          cookie.set('junyao_ucenter', this.loginInfo, { domain: 'localhost' })
         })
     },
     // 创建方法，从cookie获取用户信息
     showInfo () {
       // 从cookie获取用户信息
-      const userStr = cookie.get('junyao_ucenter', { domain: '.junyao.icu' })
+      const userStr = cookie.get('junyao_ucenter', { domain: 'localhost' })
       // 把字符串转换json对象(js对象)
       if (userStr) {
         this.loginInfo = JSON.parse(userStr)
@@ -192,8 +192,8 @@ export default {
     // 退出
     logout () {
       // 清空cookie值
-      cookie.set('junyao_token', '', { domain: '.junyao.icu' })
-      cookie.set('junyao_ucenter', '', { domain: '.junyao.icu' })
+      cookie.set('Authorization', '', { domain: 'localhost' })
+      cookie.set('junyao_ucenter', '', { domain: 'localhost' })
       // 回到首页面
       window.location.href = '/'
     }
