@@ -213,94 +213,96 @@
     </section>
     <!-- /课程详情 结束 -->
     <!-- 课程评论 -->
-    <div class="mt50 commentHtml">
-      <div>
-        <h6 id="i-art-comment" class="c-c-content c-infor-title">
-          <span class="commentTitle">课程评论</span>
-        </h6>
-        <section class="lh-bj-list pr mt20 replyhtml">
-          <ul>
-            <li class="unBr">
-              <aside class="noter-pic">
-                <img
-                  width="50"
-                  height="50"
-                  class="picImg"
-                  src="~/assets/img/avatar-boy.gif"
-                >
-              </aside>
-              <div class="of">
-                <section class="n-reply-wrap">
-                  <fieldset>
-                    <textarea
-                      id="commentContent"
-                      v-model="comment.content"
-                      name=""
-                      placeholder="输入您要评论的文字"
-                    />
-                  </fieldset>
-                  <p class="of mt5 tar pl10 pr10">
-                    <span
-                      class="fl"
-                    ><tt
-                      class="c-red commentContentmeg"
-                      style="display: none"
-                    /></span>
-                    <input
-                      type="button"
-                      value="回复"
-                      class="lh-reply-btn"
-                      @click="addComment()"
-                    >
-                  </p>
-                </section>
-              </div>
-            </li>
-          </ul>
-        </section>
-        <section class="">
-          <section class="question-list lh-bj-list pr">
-            <ul class="pr10">
-              <li v-for="(comment, index) in data.items" :key="index">
+    <section class="container">
+      <div class="mt50 commentHtml">
+        <div>
+          <h6 id="i-art-comment" class="c-c-content c-infor-title">
+            <span class="commentTitle">课程评论</span>
+          </h6>
+          <section class="lh-bj-list pr mt20 replyhtml">
+            <ul>
+              <li class="unBr">
                 <aside class="noter-pic">
                   <img
                     width="50"
                     height="50"
                     class="picImg"
-                    :src="comment.avatar"
+                    src="~/assets/img/avatar-boy.gif"
                   >
                 </aside>
                 <div class="of">
-                  <span class="fl">
-                    <font class="fsize12 c-blue"> {{ comment.nickname }}</font>
-                    <font class="fsize12 c-999 ml5">评论：</font></span>
-                </div>
-                <div class="noter-txt mt5">
-                  <p>{{ comment.content }}</p>
-                </div>
-                <div class="of mt5">
-                  <span
-                    class="fr"
-                  ><font class="fsize12 c-999 ml5">{{
-                    comment.createdTime
-                  }}</font></span>
+                  <section class="n-reply-wrap">
+                    <fieldset>
+                      <textarea
+                        id="commentContent"
+                        v-model="comment.content"
+                        name=""
+                        placeholder="输入您要评论的文字"
+                      />
+                    </fieldset>
+                    <p class="of mt5 tar pl10 pr10">
+                      <span
+                        class="fl"
+                      ><tt
+                        class="c-red commentContentmeg"
+                        style="display: none"
+                      /></span>
+                      <input
+                        type="button"
+                        value="回复"
+                        class="lh-reply-btn"
+                        @click="addComment()"
+                      >
+                    </p>
+                  </section>
                 </div>
               </li>
             </ul>
           </section>
-        </section>
-        <!-- 公共分页 开始 -->
-        <el-pagination
-          :current-page="commentPage.page"
-          :page-size="commentPage.pageSize"
-          :total="total"
-          style="padding: 30px 0; text-align: center"
-          layout="total, prev, pager, next, jumper"
-          @current-change="gotoPage"
-        />
+          <section class="">
+            <section class="question-list lh-bj-list pr">
+              <ul class="pr10">
+                <li v-for="(comment, index) in commentList" :key="index">
+                  <aside class="noter-pic">
+                    <img
+                      width="50"
+                      height="50"
+                      class="picImg"
+                      :src="comment.avatar"
+                    >
+                  </aside>
+                  <div class="of">
+                    <span class="fl">
+                      <font class="fsize12 c-blue"> {{ comment.nickname }}</font>
+                      <font class="fsize12 c-999 ml5">评论：</font></span>
+                  </div>
+                  <div class="noter-txt mt5">
+                    <p>{{ comment.content }}</p>
+                  </div>
+                  <div class="of mt5">
+                    <span
+                      class="fr"
+                    ><font class="fsize12 c-999 ml5">{{
+                      comment.createdTime
+                    }}</font></span>
+                  </div>
+                </li>
+              </ul>
+            </section>
+          </section>
+          <!-- 公共分页 开始 -->
+          <el-pagination
+            :current-page="commentPage.page"
+            :page-size="commentPage.pageSize"
+            :total="total"
+            style="padding: 30px 0; text-align: center"
+            layout="total, prev, pager, next, jumper"
+            @current-change="gotoPage"
+          />
         <!-- 公共分页 结束 -->
+        </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -315,7 +317,7 @@ export default {
   },
   data () {
     return {
-      data: {},
+      commentList: [],
       total: 0,
       comment: {
         content: '',
@@ -324,7 +326,7 @@ export default {
       commentPage: {
         page: 1,
         pageSize: 10,
-        courseId: this.courseId
+        courseId: ''
       },
       courseDetails: {},
       chapterVideoList: [],
@@ -363,8 +365,10 @@ export default {
       })
     },
     gotoPage (page = 1) {
+      this.commentPage.page = page
+      this.commentPage.courseId = this.courseId
       commentApi.pageComment(this.commentPage).then((response) => {
-        this.data = response.data
+        this.commentList = response.data.rows
         this.total = response.data.total
       })
     },

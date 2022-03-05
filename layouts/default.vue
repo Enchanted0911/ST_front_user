@@ -20,7 +20,7 @@
             <router-link to="/teacher" tag="li" active-class="current">
               <a>名师</a>
             </router-link>
-            <router-link to="#" tag="li" active-class="current">
+            <router-link to="/article" tag="li" active-class="current">
               <a>文章</a>
             </router-link>
             <router-link to="#" tag="li" active-class="current">

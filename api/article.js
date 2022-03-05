@@ -3,25 +3,20 @@
 /* eslint-disable indent */
 import request from '@/utils/request'
 
-const apiName = '/rabbit/classroom/course-comment'
+const apiName = '/rabbit/classroom/article'
 
 export default {
-
-    pageComment(commentPage) {
+    pageArticle(articlePage) {
         return request({
             url: `${apiName}/page`,
             method: 'get',
-            params: commentPage
-
+            params: { articlePage }
         })
     },
-
-    saveComment(comment) {
+    articleDetails(id) {
         return request({
-            url: `${apiName}`,
-            method: 'post',
-            data: comment
+            url: `${apiName}/${id}`,
+            method: 'get'
         })
     }
-
 }

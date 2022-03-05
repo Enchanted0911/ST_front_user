@@ -27,6 +27,13 @@ export default {
             url: `${apiName}/${id}`,
             method: 'get'
         })
+    },
+    // eslint-disable-next-line space-before-function-paren
+    listTeacher() {
+        return request({
+            url: `${apiName}`,
+            method: 'get'
+        })
     }
 
     // eslint-disable-next-line eol-last
